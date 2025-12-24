@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Categories from "./pages/Categories";
 import CategoryDetail from "./pages/CategoryDetail";
+import SubcategoryDetail from "./pages/SubcategoryDetail";
 import Generate from "./pages/Generate";
 import History from "./pages/History";
 import NotFound from "./pages/NotFound";
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/categories/:categoryId" element={<CategoryDetail />} />
+          <Route path="/categories/:categoryId/:subcategoryId" element={<SubcategoryDetail />} />
           <Route path="/generate" element={<Generate />} />
           <Route path="/generate/:categoryId/:subcategoryId" element={<Generate />} />
           <Route path="/history" element={<History />} />
