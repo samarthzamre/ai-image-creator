@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
 import { 
   Upload, 
@@ -10,12 +10,15 @@ import {
   ImageIcon, 
   X,
   CheckCircle,
-  Sparkles
+  Sparkles,
+  Pencil
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { getSubcategoryById, getCategoryById } from "@/lib/categories";
 import { saveToHistory, downloadImage } from "@/lib/imageHistory";
+import { addWatermark } from "@/lib/watermark";
+import { ImageEditor } from "@/components/ImageEditor";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -36,6 +39,7 @@ const Generate = () => {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const category = categoryId ? getCategoryById(categoryId) : undefined;
   const subcategory = category && subcategoryId 
@@ -98,14 +102,17 @@ const Generate = () => {
       // Simulate API call - replace with actual Gemini API integration
       await new Promise((resolve) => setTimeout(resolve, 3000));
       
-      // For demo, we'll use the uploaded image with a filter effect
+      // For demo, we'll use the uploaded image
       // In production, this would call the Gemini API
-      setGeneratedImage(uploadedImage);
+      // Add watermark to the generated image
+      const watermarkedImage = await addWatermark(uploadedImage, "AI ImageGen");
+      
+      setGeneratedImage(watermarkedImage);
       
       // Save to history
       saveToHistory({
         originalImage: uploadedImage,
-        generatedImage: uploadedImage,
+        generatedImage: watermarkedImage,
         categoryId: category.id,
         subcategoryId: subcategory.id,
         categoryName: category.name,
@@ -140,6 +147,38 @@ const Generate = () => {
       toast({
         title: "Download failed",
         description: "Could not download the image. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditSave = async (editedImageUrl: string) => {
+    try {
+      // Add watermark to edited image
+      const watermarkedImage = await addWatermark(editedImageUrl, "AI ImageGen");
+      setGeneratedImage(watermarkedImage);
+      setIsEditing(false);
+      
+      // Update history with edited image
+      if (category && subcategory && uploadedImage) {
+        saveToHistory({
+          originalImage: uploadedImage,
+          generatedImage: watermarkedImage,
+          categoryId: category.id,
+          subcategoryId: subcategory.id,
+          categoryName: category.name,
+          subcategoryName: subcategory.name,
+        });
+      }
+
+      toast({
+        title: "Edits applied!",
+        description: "Your changes have been saved",
+      });
+    } catch {
+      toast({
+        title: "Edit failed",
+        description: "Could not apply edits. Please try again.",
         variant: "destructive",
       });
     }
@@ -184,6 +223,17 @@ const Generate = () => {
   return (
     <main className="min-h-screen">
       <Navbar />
+      
+      {/* Image Editor Modal */}
+      <AnimatePresence>
+        {isEditing && generatedImage && (
+          <ImageEditor
+            imageUrl={generatedImage}
+            onSave={handleEditSave}
+            onCancel={() => setIsEditing(false)}
+          />
+        )}
+      </AnimatePresence>
       
       <section className="pt-28 pb-16 px-4 md:px-8">
         <div className="container-custom max-w-6xl">
@@ -288,7 +338,7 @@ const Generate = () => {
                     {generatedImage ? "Generated Result" : "Your Photo"}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    {generatedImage ? "Download your AI masterpiece" : "Upload to start transformation"}
+                    {generatedImage ? "Download or edit your AI masterpiece" : "Upload to start transformation"}
                   </p>
                 </div>
               </div>
@@ -377,6 +427,16 @@ const Generate = () => {
                       </button>
                     )}
 
+                    {/* Edit button - only show when generated */}
+                    {!isGenerating && generatedImage && (
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        className="absolute top-3 left-3 w-10 h-10 rounded-xl glass-card flex items-center justify-center hover:bg-primary/20 hover:border-primary/50 transition-colors group"
+                      >
+                        <Pencil className="w-5 h-5 group-hover:text-primary" />
+                      </button>
+                    )}
+
                     {/* Status Badge */}
                     {!isGenerating && (
                       <div className="absolute bottom-3 left-3 right-3">
@@ -427,43 +487,53 @@ const Generate = () => {
             </Button>
 
             {generatedImage && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="btn-secondary text-lg px-10 py-5 h-auto w-full sm:w-auto gap-3">
-                    <Download className="w-5 h-5" />
-                    Download
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="glass-card border-border">
-                  <DropdownMenuItem onClick={() => handleDownload("png")} className="cursor-pointer">
-                    Download as PNG
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleDownload("jpg")} className="cursor-pointer">
-                    Download as JPG
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleDownload("jpeg")} className="cursor-pointer">
-                    Download as JPEG
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <>
+                <Button
+                  className="btn-secondary text-lg px-10 py-5 h-auto w-full sm:w-auto gap-3"
+                  onClick={() => setIsEditing(true)}
+                >
+                  <Pencil className="w-5 h-5" />
+                  Edit Image
+                </Button>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="btn-secondary text-lg px-10 py-5 h-auto w-full sm:w-auto gap-3">
+                      <Download className="w-5 h-5" />
+                      Download
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center" className="glass-card border-border/50">
+                    <DropdownMenuItem onClick={() => handleDownload("png")} className="cursor-pointer">
+                      <Download className="w-4 h-4 mr-2" />
+                      Download as PNG
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDownload("jpg")} className="cursor-pointer">
+                      <Download className="w-4 h-4 mr-2" />
+                      Download as JPG
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDownload("jpeg")} className="cursor-pointer">
+                      <Download className="w-4 h-4 mr-2" />
+                      Download as JPEG
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
             )}
           </motion.div>
 
-          {/* Success Message */}
-          {generatedImage && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-8 text-center"
-            >
-              <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full glass-card border-success/20">
-                <CheckCircle className="w-5 h-5 text-success" />
-                <span className="text-sm font-medium">
-                  Image saved to history for 24 hours
-                </span>
-              </div>
-            </motion.div>
-          )}
+          {/* Info Section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="mt-12 text-center"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 text-sm text-muted-foreground">
+              <Sparkles className="w-4 h-4" />
+              <span>Powered by Gemini 2.5 Flash AI • All images include watermark</span>
+            </div>
+          </motion.div>
         </div>
       </section>
 
