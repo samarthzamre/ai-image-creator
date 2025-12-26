@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,26 +6,26 @@
 
 @layer base {
   :root {
-    --background: 250 25% 3%;
-    --foreground: 0 0% 98%;
+    --background: 30 15% 6%;
+    --foreground: 40 20% 95%;
 
-    --card: 250 20% 7%;
-    --card-foreground: 0 0% 98%;
+    --card: 30 12% 9%;
+    --card-foreground: 40 20% 95%;
 
-    --popover: 250 20% 7%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 30 12% 9%;
+    --popover-foreground: 40 20% 95%;
 
-    --primary: 280 100% 70%;
-    --primary-foreground: 250 25% 3%;
+    --primary: 15 80% 55%;
+    --primary-foreground: 30 15% 6%;
 
-    --secondary: 250 15% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 30 10% 14%;
+    --secondary-foreground: 40 20% 95%;
 
-    --muted: 250 15% 15%;
-    --muted-foreground: 250 10% 60%;
+    --muted: 30 10% 18%;
+    --muted-foreground: 30 15% 55%;
 
-    --accent: 330 85% 60%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 42 90% 55%;
+    --accent-foreground: 30 15% 6%;
 
     --success: 160 84% 39%;
     --success-foreground: 0 0% 98%;
@@ -33,17 +33,17 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 250 15% 15%;
-    --input: 250 15% 15%;
-    --ring: 280 100% 70%;
+    --border: 30 12% 18%;
+    --input: 30 12% 18%;
+    --ring: 15 80% 55%;
 
-    --radius: 1rem;
+    --radius: 0.875rem;
 
-    --glow-primary: 280 100% 70%;
-    --glow-accent: 330 85% 60%;
-    --glow-blue: 210 100% 60%;
-    --glow-cyan: 180 100% 50%;
-    --glow-orange: 25 100% 60%;
+    --glow-primary: 15 80% 55%;
+    --glow-accent: 42 90% 55%;
+    --glow-coral: 8 85% 60%;
+    --glow-amber: 35 95% 50%;
+    --glow-warm: 25 90% 58%;
   }
 }
 
@@ -55,8 +55,8 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     background-image: 
-      radial-gradient(ellipse 80% 50% at 50% -20%, hsl(280 100% 70% / 0.15), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 100%, hsl(330 85% 60% / 0.1), transparent);
+      radial-gradient(ellipse 80% 50% at 50% -20%, hsl(15 80% 55% / 0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 100%, hsl(42 90% 55% / 0.08), transparent);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -66,11 +66,11 @@
 
 @layer components {
   .glass-card {
-    @apply bg-card/80 backdrop-blur-2xl border border-border/50 rounded-2xl;
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl;
     box-shadow: 
       0 0 0 1px hsl(var(--border) / 0.5),
-      0 4px 24px -4px hsl(0 0% 0% / 0.3),
-      inset 0 1px 0 hsl(0 0% 100% / 0.03);
+      0 4px 24px -4px hsl(0 0% 0% / 0.35),
+      inset 0 1px 0 hsl(40 20% 95% / 0.03);
   }
 
   .glass-card-hover {
@@ -81,9 +81,9 @@
     @apply border-primary/40;
     box-shadow: 
       0 0 0 1px hsl(var(--primary) / 0.3),
-      0 8px 40px -8px hsl(var(--primary) / 0.25),
-      0 20px 60px -15px hsl(0 0% 0% / 0.4),
-      inset 0 1px 0 hsl(0 0% 100% / 0.05);
+      0 8px 40px -8px hsl(var(--primary) / 0.2),
+      0 20px 60px -15px hsl(0 0% 0% / 0.45),
+      inset 0 1px 0 hsl(40 20% 95% / 0.05);
     transform: translateY(-4px);
   }
 
@@ -102,7 +102,7 @@
   .gradient-border::before {
     content: '';
     @apply absolute inset-0 rounded-2xl p-[2px] -z-10;
-    background: linear-gradient(135deg, hsl(var(--glow-primary)), hsl(var(--glow-accent)), hsl(var(--glow-blue)));
+    background: linear-gradient(135deg, hsl(var(--glow-primary)), hsl(var(--glow-accent)), hsl(var(--glow-coral)));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -116,7 +116,7 @@
   .glow-effect::after {
     content: '';
     @apply absolute inset-0 rounded-2xl -z-10;
-    background: linear-gradient(135deg, hsl(var(--glow-primary) / 0.4), hsl(var(--glow-accent) / 0.4));
+    background: linear-gradient(135deg, hsl(var(--glow-primary) / 0.35), hsl(var(--glow-accent) / 0.35));
     filter: blur(40px);
     transform: translateY(10px) scale(0.9);
   }
@@ -125,7 +125,7 @@
     @apply relative overflow-hidden bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold px-8 py-4 rounded-xl transition-all duration-300;
     box-shadow: 
       0 4px 20px -4px hsl(var(--primary) / 0.5),
-      inset 0 1px 0 hsl(0 0% 100% / 0.2);
+      inset 0 1px 0 hsl(40 20% 95% / 0.25);
   }
 
   .btn-primary:hover {
@@ -133,7 +133,7 @@
     box-shadow: 
       0 8px 30px -4px hsl(var(--primary) / 0.6),
       0 0 60px -10px hsl(var(--primary) / 0.4),
-      inset 0 1px 0 hsl(0 0% 100% / 0.2);
+      inset 0 1px 0 hsl(40 20% 95% / 0.25);
   }
 
   .btn-primary:active {
@@ -156,11 +156,11 @@
     @apply bg-gradient-to-r from-transparent via-foreground/5 to-transparent bg-[length:200%_100%] animate-shimmer;
   }
 
-  .neon-glow {
+  .warm-glow {
     text-shadow: 
       0 0 10px hsl(var(--primary)),
       0 0 20px hsl(var(--primary) / 0.8),
-      0 0 40px hsl(var(--primary) / 0.6);
+      0 0 40px hsl(var(--primary) / 0.5);
   }
 
   .card-3d {
@@ -169,7 +169,7 @@
   }
 
   .card-3d:hover {
-    transform: rotateY(5deg) rotateX(5deg);
+    transform: rotateY(3deg) rotateX(3deg);
   }
 
   .animate-float {
@@ -187,16 +187,45 @@
 
   .mesh-gradient {
     background: 
-      radial-gradient(at 40% 20%, hsl(var(--glow-primary) / 0.3) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsl(var(--glow-accent) / 0.2) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsl(var(--glow-blue) / 0.2) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsl(var(--glow-cyan) / 0.15) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsl(var(--glow-primary) / 0.2) 0px, transparent 50%);
+      radial-gradient(at 40% 20%, hsl(var(--glow-primary) / 0.25) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsl(var(--glow-accent) / 0.18) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsl(var(--glow-coral) / 0.15) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsl(var(--glow-amber) / 0.12) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsl(var(--glow-warm) / 0.15) 0px, transparent 50%);
   }
 
   .noise-overlay {
-    @apply pointer-events-none fixed inset-0 z-50 opacity-[0.015];
+    @apply pointer-events-none fixed inset-0 z-50 opacity-[0.012];
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  /* Editor specific styles */
+  .editor-panel {
+    @apply glass-card p-4 rounded-xl;
+  }
+
+  .editor-slider {
+    @apply w-full h-2 bg-secondary rounded-full;
+  }
+
+  .tool-button {
+    @apply flex flex-col items-center gap-1 p-3 rounded-xl transition-all duration-200 hover:bg-primary/10 hover:text-primary;
+  }
+
+  .tool-button.active {
+    @apply bg-primary/20 text-primary border border-primary/30;
+  }
+
+  .filter-preset {
+    @apply relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300;
+  }
+
+  .filter-preset:hover {
+    @apply ring-2 ring-primary/50 scale-105;
+  }
+
+  .filter-preset.active {
+    @apply ring-2 ring-primary;
   }
 }
 

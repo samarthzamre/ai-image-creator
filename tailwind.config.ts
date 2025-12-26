@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
-        display: ["Space Grotesk", "Plus Jakarta Sans", "system-ui", "sans-serif"],
+        sans: ["DM Sans", "system-ui", "sans-serif"],
+        display: ["Outfit", "DM Sans", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -58,9 +58,9 @@ export default {
         glow: {
           primary: "hsl(var(--glow-primary))",
           accent: "hsl(var(--glow-accent))",
-          blue: "hsl(var(--glow-blue))",
-          cyan: "hsl(var(--glow-cyan))",
-          orange: "hsl(var(--glow-orange))",
+          coral: "hsl(var(--glow-coral))",
+          amber: "hsl(var(--glow-amber))",
+          warm: "hsl(var(--glow-warm))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -125,6 +125,10 @@ export default {
           "0%": { opacity: "0", transform: "translateY(100%)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "pulse-warm": {
+          "0%, 100%": { boxShadow: "0 0 20px hsl(15 80% 55% / 0.3)" },
+          "50%": { boxShadow: "0 0 40px hsl(15 80% 55% / 0.5)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -138,17 +142,20 @@ export default {
         "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
         "scale-in": "scale-in 0.4s ease-out forwards",
         "slide-up": "slide-up 0.5s ease-out forwards",
+        "pulse-warm": "pulse-warm 3s ease-in-out infinite",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-primary": "linear-gradient(135deg, hsl(var(--glow-primary)), hsl(var(--glow-accent)))",
         "gradient-glow": "linear-gradient(135deg, hsl(var(--glow-primary) / 0.2), hsl(var(--glow-accent) / 0.2))",
         "gradient-mesh": "radial-gradient(at 40% 20%, hsl(var(--glow-primary) / 0.3) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(var(--glow-accent) / 0.2) 0px, transparent 50%)",
+        "gradient-warm": "linear-gradient(135deg, hsl(var(--glow-coral)), hsl(var(--glow-amber)))",
       },
       boxShadow: {
         "glow": "0 0 40px -10px hsl(var(--primary))",
         "glow-lg": "0 0 60px -10px hsl(var(--primary))",
         "glow-accent": "0 0 40px -10px hsl(var(--accent))",
+        "warm": "0 0 30px -8px hsl(var(--glow-warm))",
       },
     },
   },

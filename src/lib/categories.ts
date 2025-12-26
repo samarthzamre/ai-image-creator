@@ -20,7 +20,7 @@ export interface Subcategory {
   id: string;
   name: string;
   description: string;
-  prompt: string; // Hidden prompt for AI generation
+  prompt: string;
   sampleImages: SampleImage[];
 }
 
@@ -39,38 +39,44 @@ export const categories: Category[] = [
     name: "Girls",
     description: "Beautiful portrait styles for girls",
     icon: "👧",
-    color: "from-pink-500 to-rose-500",
+    color: "from-rose-500 to-pink-500",
     subcategories: [
       {
         id: "princess",
         name: "Princess Style",
         description: "Elegant princess-themed portraits",
-        prompt: "Transform this photo into an elegant princess portrait with soft lighting, royal attire elements, and a magical fairy-tale atmosphere. Keep the subject's face recognizable while enhancing with subtle sparkles and ethereal glow.",
+        prompt: "Transform this photo into an elegant princess portrait with soft lighting, royal attire elements, and a magical fairy-tale atmosphere.",
         sampleImages: [
-          { id: "princess-1", url: princess1, alt: "Princess style portrait with tiara and castle" },
+          { id: "princess-1", url: princess1, alt: "Princess style portrait" },
           { id: "princess-2", url: princess1, alt: "Royal princess portrait" },
-          { id: "princess-3", url: princess1, alt: "Magical princess transformation" },
         ],
       },
       {
         id: "fairy",
         name: "Fairy Tale",
         description: "Magical fairy-themed images",
-        prompt: "Create a magical fairy-themed portrait with delicate wings, enchanted forest background, and whimsical lighting. Maintain facial features while adding ethereal elements.",
+        prompt: "Create a magical fairy-themed portrait with delicate wings, enchanted forest background, and whimsical lighting.",
         sampleImages: [
           { id: "fairy-1", url: fairy1, alt: "Enchanted fairy portrait" },
           { id: "fairy-2", url: fairy1, alt: "Magical forest fairy" },
-          { id: "fairy-3", url: fairy1, alt: "Fairy tale transformation" },
         ],
       },
       {
-        id: "modern",
-        name: "Modern Portrait",
-        description: "Contemporary stylish portraits",
-        prompt: "Create a modern, stylish portrait with contemporary fashion elements, professional lighting, and a clean aesthetic. Keep the subject recognizable with enhanced features.",
+        id: "ballet",
+        name: "Ballet Dancer",
+        description: "Graceful ballet-themed portraits",
+        prompt: "Transform into an elegant ballet dancer portrait with graceful pose, tutu elements, and soft studio lighting.",
         sampleImages: [
-          { id: "modern-1", url: professional1, alt: "Modern stylish portrait" },
-          { id: "modern-2", url: professional1, alt: "Contemporary portrait style" },
+          { id: "ballet-1", url: princess1, alt: "Ballet dancer portrait" },
+        ],
+      },
+      {
+        id: "mermaid",
+        name: "Mermaid Fantasy",
+        description: "Underwater mermaid transformations",
+        prompt: "Create a mystical mermaid portrait with underwater elements, shimmering scales, and ocean backdrop.",
+        sampleImages: [
+          { id: "mermaid-1", url: fairy1, alt: "Mermaid fantasy portrait" },
         ],
       },
     ],
@@ -86,32 +92,47 @@ export const categories: Category[] = [
         id: "superhero",
         name: "Superhero Style",
         description: "Action-packed superhero portraits",
-        prompt: "Transform this photo into a dynamic superhero portrait with heroic pose elements, dramatic lighting, and powerful energy effects. Keep the subject recognizable while adding superhero costume elements.",
+        prompt: "Transform this photo into a dynamic superhero portrait with heroic pose elements, dramatic lighting, and powerful energy effects.",
         sampleImages: [
-          { id: "superhero-1", url: superhero1, alt: "Superhero transformation portrait" },
+          { id: "superhero-1", url: superhero1, alt: "Superhero transformation" },
           { id: "superhero-2", url: superhero1, alt: "Dynamic hero pose" },
-          { id: "superhero-3", url: superhero1, alt: "Action superhero style" },
         ],
       },
       {
         id: "sports",
         name: "Sports Star",
         description: "Athletic sports-themed images",
-        prompt: "Create a sports star portrait with athletic energy, stadium atmosphere, and dynamic action elements. Maintain facial features while adding professional sports styling.",
+        prompt: "Create a sports star portrait with athletic energy, stadium atmosphere, and dynamic action elements.",
         sampleImages: [
           { id: "sports-1", url: sports1, alt: "Sports star portrait" },
           { id: "sports-2", url: sports1, alt: "Athletic champion style" },
-          { id: "sports-3", url: sports1, alt: "Stadium sports transformation" },
         ],
       },
       {
-        id: "adventure",
-        name: "Adventure Theme",
-        description: "Explorer and adventure style",
-        prompt: "Create an adventure-themed portrait with explorer elements, natural outdoor settings, and adventurous atmosphere. Keep the subject recognizable with adventure gear styling.",
+        id: "astronaut",
+        name: "Space Explorer",
+        description: "Astronaut and space adventures",
+        prompt: "Transform into an astronaut portrait with space suit, cosmic background, and futuristic elements.",
         sampleImages: [
-          { id: "adventure-1", url: sports1, alt: "Adventure explorer portrait" },
-          { id: "adventure-2", url: sports1, alt: "Outdoor adventure style" },
+          { id: "astronaut-1", url: superhero1, alt: "Space explorer portrait" },
+        ],
+      },
+      {
+        id: "pirate",
+        name: "Pirate Adventure",
+        description: "Swashbuckling pirate themes",
+        prompt: "Create a pirate adventure portrait with captain attire, ship deck background, and treasure elements.",
+        sampleImages: [
+          { id: "pirate-1", url: sports1, alt: "Pirate adventure portrait" },
+        ],
+      },
+      {
+        id: "ninja",
+        name: "Ninja Warrior",
+        description: "Stealthy ninja transformations",
+        prompt: "Transform into a ninja warrior portrait with martial arts pose, traditional attire, and mystical atmosphere.",
+        sampleImages: [
+          { id: "ninja-1", url: superhero1, alt: "Ninja warrior portrait" },
         ],
       },
     ],
@@ -127,31 +148,91 @@ export const categories: Category[] = [
         id: "professional",
         name: "Professional",
         description: "Corporate and business portraits",
-        prompt: "Create a professional business portrait with elegant corporate styling, studio lighting, and confident atmosphere. Keep the subject recognizable with refined professional appearance.",
+        prompt: "Create a professional business portrait with elegant corporate styling, studio lighting, and confident atmosphere.",
         sampleImages: [
-          { id: "professional-1", url: professional1, alt: "Professional business portrait" },
-          { id: "professional-2", url: professional1, alt: "Corporate executive style" },
-          { id: "professional-3", url: professional1, alt: "Business woman portrait" },
+          { id: "professional-1", url: professional1, alt: "Professional portrait" },
+          { id: "professional-2", url: professional1, alt: "Corporate style" },
         ],
       },
       {
         id: "glamour",
         name: "Glamour Style",
         description: "High-fashion glamour portraits",
-        prompt: "Transform into a high-fashion glamour portrait with sophisticated styling, professional beauty lighting, and magazine-quality finish. Maintain facial features with enhanced glamour elements.",
+        prompt: "Transform into a high-fashion glamour portrait with sophisticated styling, professional beauty lighting.",
         sampleImages: [
           { id: "glamour-1", url: professional1, alt: "Glamour fashion portrait" },
-          { id: "glamour-2", url: professional1, alt: "High fashion style" },
         ],
       },
       {
-        id: "traditional",
-        name: "Traditional",
-        description: "Cultural and traditional styles",
-        prompt: "Create a beautiful traditional portrait with elegant cultural styling, warm lighting, and graceful atmosphere. Keep the subject recognizable with traditional attire elements.",
+        id: "bridal",
+        name: "Bridal Beauty",
+        description: "Elegant bridal transformations",
+        prompt: "Create a stunning bridal portrait with elegant wedding styling, soft romantic lighting, and dreamy atmosphere.",
         sampleImages: [
-          { id: "traditional-1", url: diwali1, alt: "Traditional cultural portrait" },
-          { id: "traditional-2", url: diwali1, alt: "Elegant traditional style" },
+          { id: "bridal-1", url: princess1, alt: "Bridal beauty portrait" },
+        ],
+      },
+      {
+        id: "vintage",
+        name: "Vintage Elegance",
+        description: "Classic vintage style portraits",
+        prompt: "Transform into a vintage elegance portrait with retro styling, classic Hollywood lighting, and timeless atmosphere.",
+        sampleImages: [
+          { id: "vintage-1", url: professional1, alt: "Vintage elegance portrait" },
+        ],
+      },
+      {
+        id: "bohemian",
+        name: "Bohemian Spirit",
+        description: "Free-spirited bohemian looks",
+        prompt: "Create a bohemian spirit portrait with natural outdoor setting, flowing fabrics, and ethereal lighting.",
+        sampleImages: [
+          { id: "bohemian-1", url: fairy1, alt: "Bohemian spirit portrait" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "men",
+    name: "Men",
+    description: "Stylish portrait styles for men",
+    icon: "👨",
+    color: "from-slate-600 to-gray-700",
+    subcategories: [
+      {
+        id: "business",
+        name: "Business Executive",
+        description: "Professional executive portraits",
+        prompt: "Create a professional executive portrait with sophisticated business styling, confident pose, and studio lighting.",
+        sampleImages: [
+          { id: "business-1", url: professional1, alt: "Business executive portrait" },
+        ],
+      },
+      {
+        id: "rugged",
+        name: "Rugged Outdoors",
+        description: "Adventurous outdoor portraits",
+        prompt: "Transform into a rugged outdoor portrait with adventure styling, natural lighting, and wilderness backdrop.",
+        sampleImages: [
+          { id: "rugged-1", url: sports1, alt: "Rugged outdoor portrait" },
+        ],
+      },
+      {
+        id: "fitness",
+        name: "Fitness Model",
+        description: "Athletic fitness portraits",
+        prompt: "Create a fitness model portrait with athletic physique highlight, dynamic pose, and gym or outdoor setting.",
+        sampleImages: [
+          { id: "fitness-1", url: sports1, alt: "Fitness model portrait" },
+        ],
+      },
+      {
+        id: "artistic",
+        name: "Artistic Portrait",
+        description: "Creative artistic transformations",
+        prompt: "Transform into an artistic portrait with creative lighting, dramatic shadows, and fine art aesthetic.",
+        sampleImages: [
+          { id: "artistic-1", url: professional1, alt: "Artistic portrait" },
         ],
       },
     ],
@@ -167,53 +248,193 @@ export const categories: Category[] = [
         id: "diwali",
         name: "Diwali",
         description: "Festival of Lights celebration",
-        prompt: "Transform this photo into a beautiful Diwali celebration portrait with warm golden lighting, diya lamps, rangoli elements, and festive Indian traditional attire. Add sparklers and fireworks in the background while keeping the subject clearly recognizable.",
+        prompt: "Transform this photo into a beautiful Diwali celebration portrait with warm golden lighting, diya lamps, rangoli elements.",
         sampleImages: [
-          { id: "diwali-1", url: diwali1, alt: "Diwali celebration with diyas and traditional attire" },
-          { id: "diwali-2", url: diwali2, alt: "Diwali portrait with sparklers and fireworks" },
-          { id: "diwali-3", url: diwali3, alt: "Family Diwali celebration with rangoli" },
-        ],
-      },
-      {
-        id: "dussehra",
-        name: "Dussehra",
-        description: "Victory celebration theme",
-        prompt: "Create a Dussehra festival portrait with vibrant celebration elements, traditional decorations, and the spirit of victory over evil. Include festival elements while maintaining the subject's recognizable features.",
-        sampleImages: [
-          { id: "dussehra-1", url: diwali2, alt: "Dussehra victory celebration" },
-          { id: "dussehra-2", url: diwali2, alt: "Traditional Dussehra portrait" },
-        ],
-      },
-      {
-        id: "sankranti",
-        name: "Sankranti",
-        description: "Harvest festival celebration",
-        prompt: "Create a Makar Sankranti celebration portrait with colorful kites, traditional attire, and harvest festival atmosphere. Add festive elements while keeping the subject clearly recognizable.",
-        sampleImages: [
-          { id: "sankranti-1", url: diwali3, alt: "Sankranti kite festival portrait" },
-          { id: "sankranti-2", url: diwali3, alt: "Harvest festival celebration" },
+          { id: "diwali-1", url: diwali1, alt: "Diwali celebration" },
+          { id: "diwali-2", url: diwali2, alt: "Diwali with sparklers" },
+          { id: "diwali-3", url: diwali3, alt: "Family Diwali celebration" },
         ],
       },
       {
         id: "holi",
         name: "Holi",
         description: "Festival of Colors",
-        prompt: "Transform into a vibrant Holi celebration portrait with colorful powder splashes, joyful atmosphere, and festive energy. Add bright colors artistically while maintaining the subject's recognizable features.",
+        prompt: "Transform into a vibrant Holi celebration portrait with colorful powder splashes, joyful atmosphere.",
         sampleImages: [
-          { id: "holi-1", url: holi1, alt: "Holi colors celebration portrait" },
-          { id: "holi-2", url: holi1, alt: "Vibrant Holi festival transformation" },
-          { id: "holi-3", url: holi1, alt: "Festival of colors portrait" },
+          { id: "holi-1", url: holi1, alt: "Holi colors celebration" },
+          { id: "holi-2", url: holi1, alt: "Vibrant Holi festival" },
         ],
       },
       {
         id: "christmas",
         name: "Christmas",
         description: "Christmas celebration theme",
-        prompt: "Create a magical Christmas portrait with festive decorations, warm holiday lighting, snow elements, and Christmas cheer. Add Santa hat or winter elements while keeping the subject recognizable.",
+        prompt: "Create a magical Christmas portrait with festive decorations, warm holiday lighting, snow elements.",
         sampleImages: [
-          { id: "christmas-1", url: christmas1, alt: "Christmas celebration with Santa hat" },
+          { id: "christmas-1", url: christmas1, alt: "Christmas celebration" },
           { id: "christmas-2", url: christmas1, alt: "Holiday festive portrait" },
-          { id: "christmas-3", url: christmas1, alt: "Winter Christmas transformation" },
+        ],
+      },
+      {
+        id: "navratri",
+        name: "Navratri",
+        description: "Navratri Garba celebration",
+        prompt: "Create a vibrant Navratri portrait with traditional Garba attire, colorful decorations, and festive dance atmosphere.",
+        sampleImages: [
+          { id: "navratri-1", url: diwali1, alt: "Navratri Garba portrait" },
+        ],
+      },
+      {
+        id: "eid",
+        name: "Eid Celebration",
+        description: "Eid festive portraits",
+        prompt: "Transform into an elegant Eid celebration portrait with traditional attire, crescent moon elements, and festive atmosphere.",
+        sampleImages: [
+          { id: "eid-1", url: diwali2, alt: "Eid celebration portrait" },
+        ],
+      },
+      {
+        id: "halloween",
+        name: "Halloween",
+        description: "Spooky Halloween themes",
+        prompt: "Create a fun Halloween portrait with costume elements, spooky decorations, and atmospheric lighting.",
+        sampleImages: [
+          { id: "halloween-1", url: christmas1, alt: "Halloween themed portrait" },
+        ],
+      },
+      {
+        id: "newyear",
+        name: "New Year",
+        description: "New Year celebration",
+        prompt: "Create a glamorous New Year celebration portrait with party atmosphere, sparkles, and midnight countdown elements.",
+        sampleImages: [
+          { id: "newyear-1", url: diwali3, alt: "New Year celebration portrait" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "family",
+    name: "Family",
+    description: "Family portrait themes",
+    icon: "👨‍👩‍👧‍👦",
+    color: "from-teal-500 to-emerald-500",
+    subcategories: [
+      {
+        id: "traditional",
+        name: "Traditional Family",
+        description: "Classic family portraits",
+        prompt: "Create a warm traditional family portrait with elegant styling, soft studio lighting, and timeless composition.",
+        sampleImages: [
+          { id: "traditional-1", url: professional1, alt: "Traditional family portrait" },
+        ],
+      },
+      {
+        id: "outdoor",
+        name: "Outdoor Adventure",
+        description: "Fun outdoor family photos",
+        prompt: "Transform into a joyful outdoor family portrait with natural setting, golden hour lighting, and candid moments.",
+        sampleImages: [
+          { id: "outdoor-1", url: sports1, alt: "Outdoor family portrait" },
+        ],
+      },
+      {
+        id: "holiday",
+        name: "Holiday Card",
+        description: "Perfect holiday card photos",
+        prompt: "Create a festive holiday card portrait with seasonal decorations, matching outfits, and cheerful atmosphere.",
+        sampleImages: [
+          { id: "holiday-1", url: christmas1, alt: "Holiday card family portrait" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "anime",
+    name: "Anime & Cartoon",
+    description: "Anime and cartoon transformations",
+    icon: "🎨",
+    color: "from-pink-500 to-cyan-400",
+    subcategories: [
+      {
+        id: "anime",
+        name: "Anime Style",
+        description: "Japanese anime transformation",
+        prompt: "Transform into an anime style portrait with large expressive eyes, stylized features, and anime art aesthetic.",
+        sampleImages: [
+          { id: "anime-1", url: fairy1, alt: "Anime style portrait" },
+        ],
+      },
+      {
+        id: "pixar",
+        name: "Pixar Style",
+        description: "3D Pixar-like characters",
+        prompt: "Create a Pixar-style 3D character portrait with exaggerated features, vibrant colors, and cinematic lighting.",
+        sampleImages: [
+          { id: "pixar-1", url: superhero1, alt: "Pixar style portrait" },
+        ],
+      },
+      {
+        id: "disney",
+        name: "Disney Princess",
+        description: "Disney-inspired portraits",
+        prompt: "Transform into a Disney princess style portrait with magical elements, fairytale aesthetic, and enchanting atmosphere.",
+        sampleImages: [
+          { id: "disney-1", url: princess1, alt: "Disney princess portrait" },
+        ],
+      },
+      {
+        id: "manga",
+        name: "Manga Hero",
+        description: "Manga comic book style",
+        prompt: "Create a manga hero portrait with dynamic action pose, speed lines, and dramatic manga art styling.",
+        sampleImages: [
+          { id: "manga-1", url: superhero1, alt: "Manga hero portrait" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "fantasy",
+    name: "Fantasy & Sci-Fi",
+    description: "Magical and futuristic themes",
+    icon: "🔮",
+    color: "from-violet-600 to-purple-500",
+    subcategories: [
+      {
+        id: "wizard",
+        name: "Wizard & Sorcerer",
+        description: "Magical wizard portraits",
+        prompt: "Transform into a powerful wizard portrait with mystical robes, magical aura, and enchanted atmosphere.",
+        sampleImages: [
+          { id: "wizard-1", url: fairy1, alt: "Wizard portrait" },
+        ],
+      },
+      {
+        id: "cyberpunk",
+        name: "Cyberpunk",
+        description: "Futuristic cyberpunk style",
+        prompt: "Create a cyberpunk portrait with neon lights, futuristic technology, and dystopian city backdrop.",
+        sampleImages: [
+          { id: "cyberpunk-1", url: superhero1, alt: "Cyberpunk portrait" },
+        ],
+      },
+      {
+        id: "elf",
+        name: "Fantasy Elf",
+        description: "Elegant elven transformations",
+        prompt: "Transform into an ethereal elf portrait with pointed ears, mystical forest setting, and magical elements.",
+        sampleImages: [
+          { id: "elf-1", url: fairy1, alt: "Fantasy elf portrait" },
+        ],
+      },
+      {
+        id: "vampire",
+        name: "Gothic Vampire",
+        description: "Dark vampire aesthetics",
+        prompt: "Create a gothic vampire portrait with dramatic dark styling, mysterious atmosphere, and elegant gothic elements.",
+        sampleImages: [
+          { id: "vampire-1", url: professional1, alt: "Gothic vampire portrait" },
         ],
       },
     ],
