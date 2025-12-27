@@ -14,28 +14,26 @@ import {
   X,
   SlidersHorizontal,
   Crop,
-  Maximize2,
   Undo2,
   Redo2,
   ZoomIn,
   ZoomOut,
-  Move,
   Download,
   Sparkles,
   Eraser,
   ArrowUpRight,
   Wand2,
-  Image as ImageIcon,
   Thermometer,
   Focus,
   Aperture,
   User,
   Smile,
   Eye,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
 interface ImageEditorProps {
@@ -88,10 +86,10 @@ const filters = [
   { id: "none", name: "Original", css: "" },
   { id: "bw", name: "B&W", css: "grayscale(100%)" },
   { id: "vintage", name: "Vintage", css: "sepia(50%) contrast(90%) brightness(90%)" },
-  { id: "cinematic", name: "Cinematic", css: "contrast(120%) saturate(85%) brightness(90%)" },
+  { id: "cinematic", name: "Cinema", css: "contrast(120%) saturate(85%) brightness(90%)" },
   { id: "warm", name: "Warm", css: "sepia(20%) saturate(120%) brightness(105%)" },
   { id: "cool", name: "Cool", css: "saturate(90%) brightness(105%) hue-rotate(10deg)" },
-  { id: "dramatic", name: "Dramatic", css: "contrast(130%) saturate(110%)" },
+  { id: "dramatic", name: "Drama", css: "contrast(130%) saturate(110%)" },
   { id: "fade", name: "Fade", css: "contrast(90%) brightness(110%) saturate(80%)" },
 ];
 
@@ -101,24 +99,24 @@ const aspectRatios = [
   { id: "4:5", name: "4:5", ratio: 0.8 },
   { id: "16:9", name: "16:9", ratio: 16 / 9 },
   { id: "9:16", name: "9:16", ratio: 9 / 16 },
-  { id: "4:3", name: "4:3", ratio: 4 / 3 },
-  { id: "3:2", name: "3:2", ratio: 3 / 2 },
 ];
 
 const aiFeatures = [
-  { id: "bg-remove", name: "Remove Background", icon: Eraser, description: "AI-powered background removal" },
-  { id: "upscale", name: "Upscale 2x", icon: ArrowUpRight, description: "Enhance resolution" },
-  { id: "auto-enhance", name: "Auto Enhance", icon: Wand2, description: "AI color correction" },
-  { id: "denoise", name: "Denoise", icon: Focus, description: "Remove image noise" },
-  { id: "sharpen-ai", name: "AI Sharpen", icon: Aperture, description: "Intelligent sharpening" },
+  { id: "bg-remove", name: "Remove BG", icon: Eraser },
+  { id: "upscale", name: "Upscale", icon: ArrowUpRight },
+  { id: "auto-enhance", name: "Enhance", icon: Wand2 },
+  { id: "denoise", name: "Denoise", icon: Focus },
+  { id: "sharpen-ai", name: "Sharpen", icon: Aperture },
 ];
 
 const portraitFeatures = [
-  { id: "skin-smooth", name: "Skin Smooth", icon: User, description: "Natural skin smoothing" },
-  { id: "blemish", name: "Blemish Removal", icon: Smile, description: "Remove blemishes" },
-  { id: "teeth-whiten", name: "Teeth Whitening", icon: Smile, description: "Brighten teeth" },
-  { id: "eye-enhance", name: "Eye Enhancement", icon: Eye, description: "Brighten & enhance eyes" },
+  { id: "skin-smooth", name: "Smooth", icon: User },
+  { id: "blemish", name: "Blemish", icon: Smile },
+  { id: "teeth-whiten", name: "Teeth", icon: Smile },
+  { id: "eye-enhance", name: "Eyes", icon: Eye },
 ];
+
+type TabType = "adjust" | "transform" | "filters" | "ai";
 
 export const ImageEditor = ({ imageUrl, onSave, onCancel }: ImageEditorProps) => {
   const [editState, setEditState] = useState<EditState>(defaultState);
@@ -126,9 +124,10 @@ export const ImageEditor = ({ imageUrl, onSave, onCancel }: ImageEditorProps) =>
   const [historyIndex, setHistoryIndex] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeAiFeature, setActiveAiFeature] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabType>("adjust");
+  const [showPanel, setShowPanel] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const img = new Image();
@@ -181,18 +180,13 @@ export const ImageEditor = ({ imageUrl, onSave, onCancel }: ImageEditorProps) =>
   };
 
   const getFilterStyle = () => {
-    const filters = [];
-    filters.push(`brightness(${editState.brightness + (editState.exposure - 100) / 2}%)`);
-    filters.push(`contrast(${editState.contrast}%)`);
-    filters.push(`saturate(${editState.saturation}%)`);
-    filters.push(`hue-rotate(${editState.hue + editState.temperature * 2}deg)`);
-    if (editState.blur > 0) filters.push(`blur(${editState.blur}px)`);
-    
-    const selectedFilter = editState.filter !== "none" 
-      ? (filters.find((f) => f)?.valueOf() || "") 
-      : "";
-    
-    return filters.join(" ");
+    const filtersList = [];
+    filtersList.push(`brightness(${editState.brightness + (editState.exposure - 100) / 2}%)`);
+    filtersList.push(`contrast(${editState.contrast}%)`);
+    filtersList.push(`saturate(${editState.saturation}%)`);
+    filtersList.push(`hue-rotate(${editState.hue + editState.temperature * 2}deg)`);
+    if (editState.blur > 0) filtersList.push(`blur(${editState.blur}px)`);
+    return filtersList.join(" ");
   };
 
   const getPresetFilterStyle = () => {
@@ -306,39 +300,27 @@ export const ImageEditor = ({ imageUrl, onSave, onCancel }: ImageEditorProps) =>
     setIsProcessing(true);
     toast.info(`Processing ${featureId}...`);
 
-    // Simulate AI processing - in production this would call the edge function
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     setIsProcessing(false);
     setActiveAiFeature(null);
-    toast.success(`${featureId} applied successfully!`);
+    toast.success(`Applied successfully!`);
   };
 
-  const adjustmentGroups = [
-    {
-      title: "Light",
-      controls: [
-        { key: "brightness", label: "Brightness", icon: Sun, min: 0, max: 200, default: 100 },
-        { key: "exposure", label: "Exposure", icon: Sun, min: 0, max: 200, default: 100 },
-        { key: "contrast", label: "Contrast", icon: Contrast, min: 0, max: 200, default: 100 },
-      ],
-    },
-    {
-      title: "Color",
-      controls: [
-        { key: "saturation", label: "Saturation", icon: Droplets, min: 0, max: 200, default: 100 },
-        { key: "hue", label: "Hue", icon: Palette, min: 0, max: 360, default: 0 },
-        { key: "temperature", label: "Temperature", icon: Thermometer, min: -100, max: 100, default: 0 },
-        { key: "tint", label: "Tint", icon: Palette, min: -100, max: 100, default: 0 },
-      ],
-    },
-    {
-      title: "Detail",
-      controls: [
-        { key: "sharpness", label: "Sharpness", icon: Focus, min: 0, max: 100, default: 0 },
-        { key: "blur", label: "Blur", icon: Aperture, min: 0, max: 20, default: 0 },
-      ],
-    },
+  const adjustmentControls = [
+    { key: "brightness", label: "Brightness", icon: Sun, min: 0, max: 200, default: 100 },
+    { key: "contrast", label: "Contrast", icon: Contrast, min: 0, max: 200, default: 100 },
+    { key: "saturation", label: "Saturation", icon: Droplets, min: 0, max: 200, default: 100 },
+    { key: "hue", label: "Hue", icon: Palette, min: 0, max: 360, default: 0 },
+    { key: "temperature", label: "Temp", icon: Thermometer, min: -100, max: 100, default: 0 },
+    { key: "blur", label: "Blur", icon: Aperture, min: 0, max: 20, default: 0 },
+  ];
+
+  const tabs: { id: TabType; label: string }[] = [
+    { id: "adjust", label: "Adjust" },
+    { id: "transform", label: "Transform" },
+    { id: "filters", label: "Filters" },
+    { id: "ai", label: "AI" },
   ];
 
   return (
@@ -346,310 +328,351 @@ export const ImageEditor = ({ imageUrl, onSave, onCancel }: ImageEditorProps) =>
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex bg-background/98 backdrop-blur-lg"
+      className="fixed inset-0 z-50 flex flex-col bg-background/98 backdrop-blur-lg"
     >
       <canvas ref={canvasRef} className="hidden" />
       
-      {/* Left Panel - Tools */}
-      <div className="w-80 border-r border-border bg-card/50 overflow-y-auto">
-        <div className="p-4 border-b border-border flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-              <SlidersHorizontal className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h2 className="font-display font-semibold">Image Editor</h2>
-              <p className="text-xs text-muted-foreground">Professional editing tools</p>
-            </div>
-          </div>
-        </div>
-
-        <Tabs defaultValue="adjust" className="w-full">
-          <TabsList className="w-full grid grid-cols-4 p-1 m-2 mr-4">
-            <TabsTrigger value="adjust" className="text-xs">Adjust</TabsTrigger>
-            <TabsTrigger value="transform" className="text-xs">Transform</TabsTrigger>
-            <TabsTrigger value="filters" className="text-xs">Filters</TabsTrigger>
-            <TabsTrigger value="ai" className="text-xs">AI</TabsTrigger>
-          </TabsList>
-
-          {/* Adjustments Tab */}
-          <TabsContent value="adjust" className="p-4 space-y-6">
-            {adjustmentGroups.map((group) => (
-              <div key={group.title} className="space-y-3">
-                <h4 className="text-sm font-medium text-muted-foreground">{group.title}</h4>
-                {group.controls.map(({ key, label, icon: Icon, min, max }) => (
-                  <div key={key} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm">{label}</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground w-12 text-right">
-                        {editState[key as keyof EditState] as number}
-                        {key === "hue" ? "°" : key === "blur" ? "px" : "%"}
-                      </span>
-                    </div>
-                    <Slider
-                      value={[editState[key as keyof EditState] as number]}
-                      onValueChange={([value]) => updateState({ [key]: value })}
-                      min={min}
-                      max={max}
-                      step={1}
-                      className="cursor-pointer"
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
-          </TabsContent>
-
-          {/* Transform Tab */}
-          <TabsContent value="transform" className="p-4 space-y-6">
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-muted-foreground">Rotate & Flip</h4>
-              <div className="grid grid-cols-4 gap-2">
-                <button
-                  onClick={() => updateState({ rotation: editState.rotation - 90 })}
-                  className="tool-button"
-                >
-                  <RotateCcw className="w-5 h-5" />
-                  <span className="text-xs">Left</span>
-                </button>
-                <button
-                  onClick={() => updateState({ rotation: editState.rotation + 90 })}
-                  className="tool-button"
-                >
-                  <RotateCw className="w-5 h-5" />
-                  <span className="text-xs">Right</span>
-                </button>
-                <button
-                  onClick={() => updateState({ flipH: !editState.flipH })}
-                  className={`tool-button ${editState.flipH ? "active" : ""}`}
-                >
-                  <FlipHorizontal className="w-5 h-5" />
-                  <span className="text-xs">Flip H</span>
-                </button>
-                <button
-                  onClick={() => updateState({ flipV: !editState.flipV })}
-                  className={`tool-button ${editState.flipV ? "active" : ""}`}
-                >
-                  <FlipVertical className="w-5 h-5" />
-                  <span className="text-xs">Flip V</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-muted-foreground">Aspect Ratio</h4>
-              <div className="grid grid-cols-4 gap-2">
-                {aspectRatios.map((ar) => (
-                  <button
-                    key={ar.id}
-                    onClick={() => updateState({ cropAspect: ar.id === "free" ? null : ar.id })}
-                    className={`tool-button ${editState.cropAspect === ar.id || (ar.id === "free" && !editState.cropAspect) ? "active" : ""}`}
-                  >
-                    <Crop className="w-4 h-4" />
-                    <span className="text-xs">{ar.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-muted-foreground">Zoom</h4>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => updateState({ zoom: Math.max(0.5, editState.zoom - 0.1) })}
-                >
-                  <ZoomOut className="w-4 h-4" />
-                </Button>
-                <Slider
-                  value={[editState.zoom * 100]}
-                  onValueChange={([value]) => updateState({ zoom: value / 100 })}
-                  min={50}
-                  max={200}
-                  step={5}
-                  className="flex-1"
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => updateState({ zoom: Math.min(2, editState.zoom + 0.1) })}
-                >
-                  <ZoomIn className="w-4 h-4" />
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground text-center">{Math.round(editState.zoom * 100)}%</p>
-            </div>
-          </TabsContent>
-
-          {/* Filters Tab */}
-          <TabsContent value="filters" className="p-4 space-y-4">
-            <h4 className="text-sm font-medium text-muted-foreground">Preset Filters</h4>
-            <div className="grid grid-cols-3 gap-3">
-              {filters.map((filter) => (
-                <button
-                  key={filter.id}
-                  onClick={() => updateState({ filter: filter.id })}
-                  className={`filter-preset aspect-square ${editState.filter === filter.id ? "active" : ""}`}
-                >
-                  <img
-                    src={imageUrl}
-                    alt={filter.name}
-                    className="w-full h-full object-cover"
-                    style={{ filter: filter.css || undefined }}
-                  />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/90 to-transparent p-2">
-                    <span className="text-xs font-medium">{filter.name}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* AI Tab */}
-          <TabsContent value="ai" className="p-4 space-y-6">
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" />
-                Smart Editing
-              </h4>
-              <div className="space-y-2">
-                {aiFeatures.map((feature) => (
-                  <button
-                    key={feature.id}
-                    onClick={() => handleAiFeature(feature.id)}
-                    disabled={isProcessing}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl glass-card hover:border-primary/40 transition-all disabled:opacity-50"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                      <feature.icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="text-left flex-1">
-                      <p className="text-sm font-medium">{feature.name}</p>
-                      <p className="text-xs text-muted-foreground">{feature.description}</p>
-                    </div>
-                    {activeAiFeature === feature.id && (
-                      <div className="w-5 h-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <User className="w-4 h-4 text-primary" />
-                Portrait & Face AI
-              </h4>
-              <div className="space-y-2">
-                {portraitFeatures.map((feature) => (
-                  <button
-                    key={feature.id}
-                    onClick={() => handleAiFeature(feature.id)}
-                    disabled={isProcessing}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl glass-card hover:border-primary/40 transition-all disabled:opacity-50"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
-                      <feature.icon className="w-5 h-5 text-accent" />
-                    </div>
-                    <div className="text-left flex-1">
-                      <p className="text-sm font-medium">{feature.name}</p>
-                      <p className="text-xs text-muted-foreground">{feature.description}</p>
-                    </div>
-                    {activeAiFeature === feature.id && (
-                      <div className="w-5 h-5 rounded-full border-2 border-accent border-t-transparent animate-spin" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* Center - Image Preview */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Bar */}
-        <div className="h-14 border-b border-border flex items-center justify-between px-4">
-          <div className="flex items-center gap-2">
+      {/* Top Bar - Mobile Optimized */}
+      <div className="flex items-center justify-between h-14 md:h-16 border-b border-border px-3 md:px-4 shrink-0 safe-top">
+        <div className="flex items-center gap-1 md:gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onCancel}
+            className="h-9 w-9 md:h-10 md:w-10"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+          <div className="hidden sm:flex items-center gap-1">
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={undo}
               disabled={historyIndex === 0}
-              className="gap-1"
+              className="h-8 px-2 text-xs"
             >
               <Undo2 className="w-4 h-4" />
-              Undo
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={redo}
               disabled={historyIndex === history.length - 1}
-              className="gap-1"
+              className="h-8 px-2 text-xs"
             >
               <Redo2 className="w-4 h-4" />
-              Redo
             </Button>
-            <Button variant="outline" size="sm" onClick={resetEdits} className="gap-1">
+            <Button variant="ghost" size="sm" onClick={resetEdits} className="h-8 px-2 text-xs">
               <RefreshCw className="w-4 h-4" />
-              Reset
             </Button>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => handleExport("png")}>
+        <div className="flex items-center gap-1 md:gap-2">
+          {/* Export Buttons */}
+          <div className="hidden sm:flex items-center gap-1">
+            <Button variant="outline" size="sm" onClick={() => handleExport("png")} className="h-8 px-2 text-xs">
               PNG
             </Button>
-            <Button variant="outline" size="sm" onClick={() => handleExport("jpg")}>
+            <Button variant="outline" size="sm" onClick={() => handleExport("jpg")} className="h-8 px-2 text-xs">
               JPG
             </Button>
-            <Button variant="outline" size="sm" onClick={() => handleExport("webp")}>
-              WebP
-            </Button>
           </div>
+          
+          {/* Mobile Export */}
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => handleExport("png")}
+            className="sm:hidden h-9 w-9"
+          >
+            <Download className="w-4 h-4" />
+          </Button>
 
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button onClick={handleSave} className="btn-primary gap-2">
-              <Check className="w-4 h-4" />
-              Apply
-            </Button>
-          </div>
+          <Button onClick={handleSave} size="sm" className="btn-primary h-9 px-3 md:px-4 text-sm gap-1">
+            <Check className="w-4 h-4" />
+            <span className="hidden xs:inline">Apply</span>
+          </Button>
         </div>
+      </div>
 
-        {/* Image Preview Area */}
-        <div
-          ref={containerRef}
-          className="flex-1 flex items-center justify-center p-8 bg-secondary/20 overflow-hidden"
-        >
-          <div className="relative max-w-full max-h-full">
-            {isProcessing && (
-              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-xl">
-                <div className="text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-                  <p className="font-medium">Processing with AI...</p>
-                  <p className="text-sm text-muted-foreground">This may take a moment</p>
-                </div>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        {/* Image Preview - Main area */}
+        <div className="flex-1 flex items-center justify-center p-4 md:p-8 overflow-hidden relative">
+          {/* Mobile Undo/Redo */}
+          <div className="absolute top-2 left-2 flex items-center gap-1 sm:hidden z-10">
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={undo}
+              disabled={historyIndex === 0}
+              className="h-8 w-8"
+            >
+              <Undo2 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={redo}
+              disabled={historyIndex === history.length - 1}
+              className="h-8 w-8"
+            >
+              <Redo2 className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {/* Toggle Panel Button - Mobile */}
+          <button
+            onClick={() => setShowPanel(!showPanel)}
+            className="md:hidden absolute bottom-4 right-4 z-10 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg"
+          >
+            {showPanel ? <ChevronRight className="w-5 h-5" /> : <SlidersHorizontal className="w-5 h-5" />}
+          </button>
+
+          {isProcessing && (
+            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-20">
+              <div className="text-center">
+                <div className="w-14 h-14 mx-auto mb-3 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+                <p className="font-medium text-sm">Processing...</p>
               </div>
-            )}
-            <img
-              src={imageUrl}
-              alt="Editing"
-              className="max-w-full max-h-[70vh] object-contain rounded-xl shadow-2xl transition-all duration-300"
-              style={{
-                transform: getTransformStyle(),
-                filter: `${getFilterStyle()} ${getPresetFilterStyle()}`,
-              }}
-            />
-          </div>
+            </div>
+          )}
+          
+          <img
+            src={imageUrl}
+            alt="Editing"
+            className="max-w-full max-h-[50vh] md:max-h-[75vh] object-contain rounded-xl shadow-2xl transition-all duration-200"
+            style={{
+              transform: getTransformStyle(),
+              filter: `${getFilterStyle()} ${getPresetFilterStyle()}`,
+            }}
+          />
         </div>
+
+        {/* Side Panel - Responsive */}
+        <AnimatePresence>
+          {showPanel && (
+            <motion.div
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="absolute md:relative bottom-0 left-0 right-0 md:w-72 lg:w-80 border-t md:border-t-0 md:border-l border-border bg-card/95 backdrop-blur-xl flex flex-col max-h-[50vh] md:max-h-full overflow-hidden safe-bottom z-10"
+            >
+              {/* Tabs */}
+              <div className="flex border-b border-border shrink-0 overflow-x-auto mobile-scroll">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-1 min-w-[70px] py-3 px-2 text-xs md:text-sm font-medium transition-colors ${
+                      activeTab === tab.id
+                        ? "text-primary border-b-2 border-primary bg-primary/5"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Tab Content */}
+              <div className="flex-1 overflow-y-auto mobile-scroll p-3 md:p-4">
+                {/* Adjust Tab */}
+                {activeTab === "adjust" && (
+                  <div className="space-y-4">
+                    {adjustmentControls.map(({ key, label, icon: Icon, min, max }) => (
+                      <div key={key} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Icon className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-xs md:text-sm">{label}</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground w-10 text-right">
+                            {editState[key as keyof EditState] as number}
+                          </span>
+                        </div>
+                        <Slider
+                          value={[editState[key as keyof EditState] as number]}
+                          onValueChange={([value]) => updateState({ [key]: value })}
+                          min={min}
+                          max={max}
+                          step={1}
+                          className="touch-pan-x"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Transform Tab */}
+                {activeTab === "transform" && (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-medium text-muted-foreground">Rotate & Flip</h4>
+                      <div className="grid grid-cols-4 gap-2">
+                        <button
+                          onClick={() => updateState({ rotation: editState.rotation - 90 })}
+                          className="tool-button"
+                        >
+                          <RotateCcw className="w-5 h-5" />
+                          <span className="text-[10px]">Left</span>
+                        </button>
+                        <button
+                          onClick={() => updateState({ rotation: editState.rotation + 90 })}
+                          className="tool-button"
+                        >
+                          <RotateCw className="w-5 h-5" />
+                          <span className="text-[10px]">Right</span>
+                        </button>
+                        <button
+                          onClick={() => updateState({ flipH: !editState.flipH })}
+                          className={`tool-button ${editState.flipH ? "active" : ""}`}
+                        >
+                          <FlipHorizontal className="w-5 h-5" />
+                          <span className="text-[10px]">Flip H</span>
+                        </button>
+                        <button
+                          onClick={() => updateState({ flipV: !editState.flipV })}
+                          className={`tool-button ${editState.flipV ? "active" : ""}`}
+                        >
+                          <FlipVertical className="w-5 h-5" />
+                          <span className="text-[10px]">Flip V</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-medium text-muted-foreground">Aspect Ratio</h4>
+                      <div className="grid grid-cols-5 gap-2">
+                        {aspectRatios.map((ar) => (
+                          <button
+                            key={ar.id}
+                            onClick={() => updateState({ cropAspect: ar.id === "free" ? null : ar.id })}
+                            className={`tool-button ${editState.cropAspect === ar.id || (ar.id === "free" && !editState.cropAspect) ? "active" : ""}`}
+                          >
+                            <Crop className="w-4 h-4" />
+                            <span className="text-[10px]">{ar.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-medium text-muted-foreground">Zoom: {Math.round(editState.zoom * 100)}%</h4>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateState({ zoom: Math.max(0.5, editState.zoom - 0.1) })}
+                          className="h-9 w-9"
+                        >
+                          <ZoomOut className="w-4 h-4" />
+                        </Button>
+                        <Slider
+                          value={[editState.zoom * 100]}
+                          onValueChange={([value]) => updateState({ zoom: value / 100 })}
+                          min={50}
+                          max={200}
+                          step={5}
+                          className="flex-1 touch-pan-x"
+                        />
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateState({ zoom: Math.min(2, editState.zoom + 0.1) })}
+                          className="h-9 w-9"
+                        >
+                          <ZoomIn className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Filters Tab */}
+                {activeTab === "filters" && (
+                  <div className="space-y-3">
+                    <h4 className="text-xs font-medium text-muted-foreground">Preset Filters</h4>
+                    <div className="grid grid-cols-4 gap-2">
+                      {filters.map((filter) => (
+                        <button
+                          key={filter.id}
+                          onClick={() => updateState({ filter: filter.id })}
+                          className={`filter-preset aspect-square ${editState.filter === filter.id ? "active" : ""}`}
+                        >
+                          <img
+                            src={imageUrl}
+                            alt={filter.name}
+                            className="w-full h-full object-cover"
+                            style={{ filter: filter.css || undefined }}
+                          />
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/90 to-transparent p-1">
+                            <span className="text-[9px] md:text-[10px] font-medium">{filter.name}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* AI Tab */}
+                {activeTab === "ai" && (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-primary" />
+                        Smart Editing
+                      </h4>
+                      <div className="grid grid-cols-3 gap-2">
+                        {aiFeatures.map((feature) => (
+                          <button
+                            key={feature.id}
+                            onClick={() => handleAiFeature(feature.id)}
+                            disabled={isProcessing}
+                            className="tool-button flex-col disabled:opacity-50"
+                          >
+                            {activeAiFeature === feature.id ? (
+                              <div className="w-5 h-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                            ) : (
+                              <feature.icon className="w-5 h-5" />
+                            )}
+                            <span className="text-[10px]">{feature.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                        <User className="w-3 h-3 text-primary" />
+                        Portrait AI
+                      </h4>
+                      <div className="grid grid-cols-4 gap-2">
+                        {portraitFeatures.map((feature) => (
+                          <button
+                            key={feature.id}
+                            onClick={() => handleAiFeature(feature.id)}
+                            disabled={isProcessing}
+                            className="tool-button flex-col disabled:opacity-50"
+                          >
+                            {activeAiFeature === feature.id ? (
+                              <div className="w-5 h-5 rounded-full border-2 border-accent border-t-transparent animate-spin" />
+                            ) : (
+                              <feature.icon className="w-5 h-5" />
+                            )}
+                            <span className="text-[10px]">{feature.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );

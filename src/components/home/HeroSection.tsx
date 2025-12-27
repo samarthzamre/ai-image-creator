@@ -1,165 +1,143 @@
 import { motion } from "framer-motion";
-import { Sparkles, ArrowRight, Wand2, Zap, Star } from "lucide-react";
+import { Sparkles, ArrowRight, Wand2, Zap, Camera, Layers } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 export const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Animated Background Orbs */}
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pt-16 pb-8 md:pt-20">
+      {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
+            scale: [1, 1.15, 1],
+            opacity: [0.2, 0.35, 0.2],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-gradient-radial from-primary/40 via-primary/10 to-transparent rounded-full blur-3xl"
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/4 left-1/4 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-gradient-radial from-primary/30 via-primary/5 to-transparent rounded-full blur-3xl"
         />
         <motion.div
           animate={{ 
-            scale: [1.2, 1, 1.2],
-            opacity: [0.3, 0.5, 0.3],
+            scale: [1.15, 1, 1.15],
+            opacity: [0.2, 0.35, 0.2],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gradient-radial from-accent/40 via-accent/10 to-transparent rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ 
-            scale: [1, 1.3, 1],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-          className="absolute top-1/2 right-1/3 w-[400px] h-[400px] bg-gradient-radial from-glow-blue/30 via-glow-blue/5 to-transparent rounded-full blur-3xl"
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          className="absolute bottom-1/4 right-1/4 w-[350px] md:w-[500px] h-[350px] md:h-[500px] bg-gradient-radial from-accent/30 via-accent/5 to-transparent rounded-full blur-3xl"
         />
       </div>
       
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.02)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.02)_1px,transparent_1px)] bg-[size:72px_72px]" />
+      {/* Subtle Grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.015)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.015)_1px,transparent_1px)] bg-[size:60px_60px] md:bg-[size:80px_80px]" />
 
-      <div className="container-custom px-4 md:px-8 relative z-10">
-        <div className="max-w-5xl mx-auto text-center">
+      <div className="container-custom px-4 md:px-6 relative z-10">
+        <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            initial={{ opacity: 0, y: 16, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.1, type: "spring" }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-card mb-8 group cursor-pointer hover:border-primary/50 transition-colors"
+            transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6 md:mb-8"
           >
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
             >
-              <Sparkles className="w-4 h-4 text-primary" />
+              <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" />
             </motion.div>
-            <span className="text-sm font-medium bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Powered by Gemini 2.5 Flash AI
+            <span className="text-xs md:text-sm font-medium text-muted-foreground">
+              Powered by Advanced AI Technology
             </span>
-            <Zap className="w-3 h-3 text-accent" />
           </motion.div>
 
           {/* Heading */}
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, type: "spring" }}
-            className="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-[1.1] tracking-tight"
+            transition={{ delay: 0.15, type: "spring", stiffness: 150 }}
+            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-5 md:mb-6 leading-[1.1] tracking-tight px-2"
           >
-            Transform Photos Into{" "}
+            Create Stunning{" "}
             <span className="gradient-text relative">
-              AI Magic
-              <motion.span
-                className="absolute -right-8 -top-4 text-3xl"
-                animate={{ rotate: [0, 15, 0], scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                ✨
-              </motion.span>
-            </span>
+              AI Images
+            </span>{" "}
+            in Seconds
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed"
+            transition={{ delay: 0.25 }}
+            className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed px-4"
           >
-            Create stunning festival looks, professional portraits, and artistic transformations
-            with our advanced <span className="text-foreground font-medium">AI Image Generator</span>
+            Transform your photos with professional AI editing. Perfect for festivals, 
+            portraits, creative projects, and more.
           </motion.p>
 
           {/* CTA Buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            transition={{ delay: 0.35 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 md:mb-16 px-4"
           >
-            <Link to="/categories">
-              <Button className="btn-primary text-lg px-10 py-5 h-auto gap-3 group">
-                <Wand2 className="w-5 h-5" />
+            <Link to="/categories" className="w-full sm:w-auto">
+              <Button className="btn-primary text-base md:text-lg px-6 md:px-8 py-3 md:py-4 h-auto gap-2 md:gap-3 group w-full sm:w-auto">
+                <Wand2 className="w-4 h-4 md:w-5 md:h-5" />
                 Start Creating
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Link to="/categories">
-              <Button className="btn-secondary text-lg px-10 py-5 h-auto gap-2">
-                <Star className="w-5 h-5" />
-                Explore Styles
+            <Link to="/categories" className="w-full sm:w-auto">
+              <Button className="btn-secondary text-base md:text-lg px-6 md:px-8 py-3 md:py-4 h-auto gap-2 w-full sm:w-auto">
+                <Layers className="w-4 h-4 md:w-5 md:h-5" />
+                Browse Styles
               </Button>
             </Link>
           </motion.div>
 
           {/* Stats */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto"
+            transition={{ delay: 0.45 }}
+            className="grid grid-cols-3 gap-3 md:gap-6 max-w-xl mx-auto px-2"
           >
             {[
-              { value: "10K+", label: "Images Created", icon: "🖼️" },
-              { value: "50+", label: "Unique Styles", icon: "🎨" },
-              { value: "99%", label: "Happy Users", icon: "⭐" },
+              { value: "50+", label: "AI Styles", icon: Camera },
+              { value: "Fast", label: "Processing", icon: Zap },
+              { value: "Free", label: "To Start", icon: Sparkles },
             ].map((stat, index) => (
               <motion.div 
                 key={index} 
-                className="glass-card p-4 md:p-6 text-center group hover:border-primary/30 transition-colors cursor-default"
-                whileHover={{ y: -4 }}
+                className="glass-card p-3 md:p-5 text-center group hover:border-primary/30 transition-colors"
+                whileHover={{ y: -2 }}
               >
-                <span className="text-2xl mb-2 block">{stat.icon}</span>
-                <div className="font-display text-2xl md:text-3xl font-bold gradient-text-static mb-1">
+                <stat.icon className="w-5 h-5 md:w-6 md:h-6 mx-auto mb-2 text-primary" />
+                <div className="font-display text-lg sm:text-xl md:text-2xl font-bold gradient-text-static mb-0.5">
                   {stat.value}
                 </div>
-                <div className="text-xs md:text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-[10px] sm:text-xs md:text-sm text-muted-foreground">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </div>
 
-      {/* Floating Elements */}
+      {/* Floating Elements - Hidden on mobile */}
       <motion.div
-        animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-32 left-8 md:left-16 w-16 md:w-20 h-16 md:h-20 rounded-2xl glass-card hidden lg:flex items-center justify-center shadow-glow"
+        animate={{ y: [0, -12, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-24 left-8 lg:left-16 w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card hidden md:flex items-center justify-center shadow-glow"
       >
-        <span className="text-3xl md:text-4xl">🎨</span>
+        <Camera className="w-6 h-6 lg:w-7 lg:h-7 text-primary" />
       </motion.div>
       <motion.div
-        animate={{ y: [0, -15, 0], rotate: [0, -5, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute top-1/3 right-8 md:right-16 w-16 md:w-20 h-16 md:h-20 rounded-2xl glass-card hidden lg:flex items-center justify-center shadow-glow-accent"
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute top-1/3 right-8 lg:right-16 w-14 h-14 lg:w-16 lg:h-16 rounded-xl glass-card hidden md:flex items-center justify-center shadow-glow-accent"
       >
-        <span className="text-3xl md:text-4xl">✨</span>
-      </motion.div>
-      <motion.div
-        animate={{ y: [0, -25, 0], rotate: [0, 8, 0] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-48 right-24 w-14 h-14 rounded-xl glass-card hidden xl:flex items-center justify-center"
-      >
-        <span className="text-2xl">🪄</span>
+        <Wand2 className="w-6 h-6 lg:w-7 lg:h-7 text-accent" />
       </motion.div>
     </section>
   );

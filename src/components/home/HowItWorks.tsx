@@ -4,27 +4,27 @@ import { FolderOpen, Upload, Sparkles, Download } from "lucide-react";
 const steps = [
   {
     icon: FolderOpen,
-    title: "Choose Category",
-    description: "Select from our curated categories like Festivals, Portraits, and more",
-    color: "from-cyan-500 to-blue-500",
+    title: "Pick a Style",
+    description: "Browse our collection of 50+ AI transformation styles",
+    step: "01",
   },
   {
     icon: Upload,
-    title: "Upload Your Image",
-    description: "Upload your photo in PNG, JPG, or JPEG format",
-    color: "from-blue-500 to-purple-500",
+    title: "Upload Photo",
+    description: "Add your image - supports PNG, JPG up to 10MB",
+    step: "02",
   },
   {
     icon: Sparkles,
-    title: "AI Generates Instantly",
-    description: "Our Gemini AI transforms your image in seconds",
-    color: "from-purple-500 to-pink-500",
+    title: "AI Magic",
+    description: "Watch as AI transforms your photo in seconds",
+    step: "03",
   },
   {
     icon: Download,
-    title: "Download & Share",
-    description: "Download your creation in high quality PNG, JPG, or JPEG",
-    color: "from-pink-500 to-red-500",
+    title: "Download",
+    description: "Save your creation in high quality format",
+    step: "04",
   },
 ];
 
@@ -32,52 +32,52 @@ export const HowItWorks = () => {
   return (
     <section className="section-padding relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/3 to-transparent" />
 
       <div className="container-custom relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-14"
         >
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
             How It <span className="gradient-text">Works</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Generate stunning AI images in just four simple steps
+          <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto px-4">
+            Create amazing AI images in four simple steps
           </p>
         </motion.div>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {steps.map((step, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               className="relative"
             >
-              <div className="glass-card-hover p-6 h-full">
+              <div className="glass-card-hover p-4 md:p-6 h-full">
                 {/* Step Number */}
-                <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center font-bold text-primary-foreground text-sm">
-                  {index + 1}
+                <div className="text-3xl md:text-4xl font-display font-bold text-primary/20 mb-3 md:mb-4">
+                  {step.step}
                 </div>
 
                 {/* Icon */}
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-4`}>
-                  <step.icon className="w-7 h-7 text-white" />
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mb-3 md:mb-4">
+                  <step.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                 </div>
 
                 {/* Content */}
-                <h3 className="font-display text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
+                <h3 className="font-display text-base md:text-lg font-semibold mb-1.5 md:mb-2">{step.title}</h3>
+                <p className="text-muted-foreground text-xs md:text-sm leading-relaxed">{step.description}</p>
               </div>
 
-              {/* Connector Line */}
+              {/* Connector - Desktop only */}
               {index < steps.length - 1 && (
                 <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-border to-transparent" />
               )}
