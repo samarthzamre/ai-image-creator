@@ -4,13 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Wand2, Search, X } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { categories } from "@/lib/categories";
+import { useCategories } from "@/lib/useCategories";
 import { Input } from "@/components/ui/input";
 
 const Categories = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const { categories } = useCategories();
 
   const filteredCategories = useMemo(() => {
     let result = categories;
@@ -34,7 +35,7 @@ const Categories = () => {
     }
     
     return result;
-  }, [searchQuery, activeCategory]);
+  }, [searchQuery, activeCategory, categories]);
 
   return (
     <main className="min-h-screen">

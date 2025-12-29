@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { categories } from "@/lib/categories";
+import { useCategories } from "@/lib/useCategories";
 
 export const CategoriesSection = () => {
+  const { categories } = useCategories();
   return (
     <section className="section-padding relative overflow-hidden">
       <div className="absolute inset-0 mesh-gradient opacity-40" />

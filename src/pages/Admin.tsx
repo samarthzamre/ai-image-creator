@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Plus, 
@@ -37,31 +37,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-interface AdminSampleImage {
-  id: string;
-  url: string;
-  alt: string;
-  file?: File;
-}
-
-interface AdminSubcategory {
-  id: string;
-  name: string;
-  description: string;
-  prompt: string;
-  sampleImages: AdminSampleImage[];
-}
-
-interface AdminCategory {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  coverImage?: string;
-  color: string;
-  subcategories: AdminSubcategory[];
-}
+import { saveAdminCategories, getAdminCategories, AdminCategory, AdminSubcategory, AdminSampleImage } from "@/lib/useCategories";
 
 const defaultColors = [
   "from-rose-500 to-pink-500",
@@ -79,11 +55,20 @@ const Admin = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
   
+  // Load categories from localStorage on mount
   const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [isAddingSubcategory, setIsAddingSubcategory] = useState(false);
+  
+  // Load existing admin categories on mount
+  useEffect(() => {
+    const existing = getAdminCategories();
+    if (existing.length > 0) {
+      setCategories(existing);
+    }
+  }, []);
   
   // New category form
   const [newCategory, setNewCategory] = useState({
@@ -119,10 +104,12 @@ const Admin = () => {
       subcategories: [],
     };
 
-    setCategories([...categories, category]);
+    const updatedCategories = [...categories, category];
+    setCategories(updatedCategories);
+    saveAdminCategories(updatedCategories);
     setNewCategory({ name: "", description: "", icon: "🎨", color: defaultColors[0] });
     setIsAddingCategory(false);
-    toast({ title: "Success", description: "Category added successfully" });
+    toast({ title: "Success", description: "Category added and synced to website" });
   };
 
   const handleAddSubcategory = () => {
@@ -139,16 +126,18 @@ const Admin = () => {
       sampleImages: [...uploadingImages],
     };
 
-    setCategories(categories.map(cat => 
+    const updatedCategories = categories.map(cat => 
       cat.id === selectedCategory 
         ? { ...cat, subcategories: [...cat.subcategories, subcategory] }
         : cat
-    ));
+    );
 
+    setCategories(updatedCategories);
+    saveAdminCategories(updatedCategories);
     setNewSubcategory({ name: "", description: "", prompt: "" });
     setUploadingImages([]);
     setIsAddingSubcategory(false);
-    toast({ title: "Success", description: "Subcategory added with images" });
+    toast({ title: "Success", description: "Subcategory added and synced to website" });
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,7 +150,6 @@ const Admin = () => {
           id: `img-${Date.now()}-${Math.random().toString(36).slice(2)}`,
           url: event.target?.result as string,
           alt: file.name.replace(/\.[^/.]+$/, ""),
-          file: file,
         };
         setUploadingImages(prev => [...prev, newImage]);
       };
@@ -175,11 +163,13 @@ const Admin = () => {
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      setCategories(categories.map(cat => 
+      const updatedCategories = categories.map(cat => 
         cat.id === categoryId 
           ? { ...cat, coverImage: event.target?.result as string }
           : cat
-      ));
+      );
+      setCategories(updatedCategories);
+      saveAdminCategories(updatedCategories);
     };
     reader.readAsDataURL(file);
   };
@@ -189,25 +179,29 @@ const Admin = () => {
   };
 
   const deleteCategory = (categoryId: string) => {
-    setCategories(categories.filter(cat => cat.id !== categoryId));
+    const updatedCategories = categories.filter(cat => cat.id !== categoryId);
+    setCategories(updatedCategories);
+    saveAdminCategories(updatedCategories);
     if (selectedCategory === categoryId) {
       setSelectedCategory(null);
     }
-    toast({ title: "Deleted", description: "Category removed" });
+    toast({ title: "Deleted", description: "Category removed and synced" });
   };
 
   const deleteSubcategory = (categoryId: string, subcategoryId: string) => {
-    setCategories(categories.map(cat => 
+    const updatedCategories = categories.map(cat => 
       cat.id === categoryId 
         ? { ...cat, subcategories: cat.subcategories.filter(sub => sub.id !== subcategoryId) }
         : cat
-    ));
-    toast({ title: "Deleted", description: "Subcategory removed" });
+    );
+    setCategories(updatedCategories);
+    saveAdminCategories(updatedCategories);
+    toast({ title: "Deleted", description: "Subcategory removed and synced" });
   };
 
   const handleSaveToStorage = () => {
-    localStorage.setItem("admin-categories", JSON.stringify(categories));
-    toast({ title: "Saved", description: "Categories saved to local storage" });
+    saveAdminCategories(categories);
+    toast({ title: "Saved", description: "All changes synced to website" });
   };
 
   const selectedCat = categories.find(c => c.id === selectedCategory);

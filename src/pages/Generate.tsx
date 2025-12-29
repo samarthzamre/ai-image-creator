@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { getSubcategoryById, getCategoryById } from "@/lib/categories";
+import { useCategories } from "@/lib/useCategories";
 import { saveToHistory, downloadImage } from "@/lib/imageHistory";
 import { addWatermark } from "@/lib/watermark";
 import { ImageEditor } from "@/components/ImageEditor";
@@ -34,6 +34,7 @@ const Generate = () => {
     subcategoryId?: string;
   }>();
   const { toast } = useToast();
+  const { getCategoryById, getSubcategoryById } = useCategories();
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);

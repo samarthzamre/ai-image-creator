@@ -6,26 +6,26 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 20% 10%;
+    --background: 210 20% 98%;
+    --foreground: 220 25% 12%;
 
-    --card: 0 0% 98%;
-    --card-foreground: 220 20% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 10%;
+    --popover-foreground: 220 25% 12%;
 
-    --primary: 200 95% 48%;
+    --primary: 200 95% 42%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 92%;
-    --secondary-foreground: 220 20% 10%;
+    --secondary: 215 20% 90%;
+    --secondary-foreground: 220 25% 15%;
 
-    --muted: 220 14% 95%;
-    --muted-foreground: 220 12% 45%;
+    --muted: 215 18% 93%;
+    --muted-foreground: 220 15% 40%;
 
-    --accent: 165 80% 45%;
-    --accent-foreground: 220 20% 10%;
+    --accent: 165 80% 38%;
+    --accent-foreground: 0 0% 100%;
 
     --success: 160 84% 39%;
     --success-foreground: 0 0% 98%;
@@ -33,26 +33,26 @@
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 200 95% 48%;
+    --border: 215 20% 82%;
+    --input: 215 20% 82%;
+    --ring: 200 95% 42%;
 
     --radius: 0.75rem;
 
-    --glow-primary: 200 95% 48%;
-    --glow-accent: 165 80% 45%;
-    --glow-cyan: 185 90% 50%;
-    --glow-teal: 175 85% 42%;
-    --glow-blue: 210 95% 55%;
+    --glow-primary: 200 95% 42%;
+    --glow-accent: 165 80% 38%;
+    --glow-cyan: 185 90% 45%;
+    --glow-teal: 175 85% 38%;
+    --glow-blue: 210 95% 50%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 220 20% 10%;
-    --sidebar-primary: 200 95% 48%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 25% 12%;
+    --sidebar-primary: 200 95% 42%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 165 80% 45%;
-    --sidebar-accent-foreground: 220 20% 10%;
-    --sidebar-border: 220 15% 88%;
-    --sidebar-ring: 200 95% 48%;
+    --sidebar-accent: 165 80% 38%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 20% 82%;
+    --sidebar-ring: 200 95% 42%;
   }
 
   .dark {
@@ -113,6 +113,14 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
+  /* Light mode background */
+  :root body {
+    background-image: 
+      radial-gradient(ellipse 70% 50% at 50% -15%, hsl(200 95% 42% / 0.04), transparent),
+      radial-gradient(ellipse 50% 35% at 100% 100%, hsl(165 80% 38% / 0.03), transparent);
+  }
+
+  /* Dark mode background */
   .dark body {
     background-image: 
       radial-gradient(ellipse 70% 50% at 50% -15%, hsl(200 95% 48% / 0.08), transparent),
@@ -125,13 +133,15 @@
 }
 
 @layer components {
+  /* Light mode glass card */
   .glass-card {
-    @apply bg-card/90 backdrop-blur-xl border border-border/60 rounded-xl;
+    @apply bg-card/95 backdrop-blur-xl border border-border/80 rounded-xl;
     box-shadow: 
-      0 0 0 1px hsl(var(--border) / 0.4),
-      0 4px 20px -4px hsl(0 0% 0% / 0.1);
+      0 0 0 1px hsl(var(--border) / 0.5),
+      0 4px 20px -4px hsl(0 0% 0% / 0.08);
   }
 
+  /* Dark mode glass card */
   .dark .glass-card {
     @apply bg-card/70;
     box-shadow: 
@@ -144,15 +154,17 @@
     @apply glass-card transition-all duration-400;
   }
 
+  /* Light mode hover */
   .glass-card-hover:hover {
-    @apply border-primary/50;
+    @apply border-primary/60;
     box-shadow: 
-      0 0 0 1px hsl(var(--primary) / 0.25),
-      0 8px 32px -8px hsl(var(--primary) / 0.15),
-      0 16px 48px -12px hsl(0 0% 0% / 0.2);
+      0 0 0 1px hsl(var(--primary) / 0.3),
+      0 8px 32px -8px hsl(var(--primary) / 0.12),
+      0 16px 48px -12px hsl(0 0% 0% / 0.1);
     transform: translateY(-2px);
   }
 
+  /* Dark mode hover */
   .dark .glass-card-hover:hover {
     box-shadow: 
       0 0 0 1px hsl(var(--primary) / 0.25),
@@ -195,19 +207,20 @@
     transform: translateY(8px) scale(0.92);
   }
 
+  /* Light mode primary button */
   .btn-primary {
     @apply relative overflow-hidden bg-gradient-to-r from-primary via-glow-cyan to-accent text-primary-foreground font-semibold px-6 py-3 rounded-lg transition-all duration-300;
     box-shadow: 
-      0 4px 16px -4px hsl(var(--primary) / 0.4),
-      inset 0 1px 0 hsl(210 20% 98% / 0.2);
+      0 4px 16px -4px hsl(var(--primary) / 0.35),
+      inset 0 1px 0 hsl(0 0% 100% / 0.2);
   }
 
   .btn-primary:hover {
     @apply scale-[1.02];
     box-shadow: 
-      0 6px 24px -4px hsl(var(--primary) / 0.5),
-      0 0 40px -8px hsl(var(--primary) / 0.3),
-      inset 0 1px 0 hsl(210 20% 98% / 0.2);
+      0 6px 24px -4px hsl(var(--primary) / 0.45),
+      0 0 40px -8px hsl(var(--primary) / 0.25),
+      inset 0 1px 0 hsl(0 0% 100% / 0.2);
   }
 
   .btn-primary:active {
@@ -265,12 +278,17 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
 
-  /* Category Pills/Capsules */
+  /* Category Pills/Capsules - Light mode */
   .category-pill {
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer touch-manipulation;
-    @apply bg-secondary/50 text-foreground border border-border/50;
-    @apply hover:bg-primary/10 hover:border-primary/50 hover:text-primary;
+    @apply bg-secondary/80 text-secondary-foreground border border-border/60;
+    @apply hover:bg-primary/10 hover:border-primary/60 hover:text-primary;
     min-height: 44px;
+  }
+
+  /* Dark mode category pill adjustments */
+  .dark .category-pill {
+    @apply bg-secondary/50 border-border/50;
   }
 
   .category-pill.active {
