@@ -6,6 +6,56 @@
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 220 20% 10%;
+
+    --card: 0 0% 98%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+
+    --primary: 200 95% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 92%;
+    --secondary-foreground: 220 20% 10%;
+
+    --muted: 220 14% 95%;
+    --muted-foreground: 220 12% 45%;
+
+    --accent: 165 80% 45%;
+    --accent-foreground: 220 20% 10%;
+
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 98%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 200 95% 48%;
+
+    --radius: 0.75rem;
+
+    --glow-primary: 200 95% 48%;
+    --glow-accent: 165 80% 45%;
+    --glow-cyan: 185 90% 50%;
+    --glow-teal: 175 85% 42%;
+    --glow-blue: 210 95% 55%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 220 20% 10%;
+    --sidebar-primary: 200 95% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 165 80% 45%;
+    --sidebar-accent-foreground: 220 20% 10%;
+    --sidebar-border: 220 15% 88%;
+    --sidebar-ring: 200 95% 48%;
+  }
+
+  .dark {
     --background: 220 20% 4%;
     --foreground: 210 20% 98%;
 
@@ -37,8 +87,6 @@
     --input: 220 15% 16%;
     --ring: 200 95% 48%;
 
-    --radius: 0.75rem;
-
     --glow-primary: 200 95% 48%;
     --glow-accent: 165 80% 45%;
     --glow-cyan: 185 90% 50%;
@@ -63,6 +111,9 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  .dark body {
     background-image: 
       radial-gradient(ellipse 70% 50% at 50% -15%, hsl(200 95% 48% / 0.08), transparent),
       radial-gradient(ellipse 50% 35% at 100% 100%, hsl(165 80% 45% / 0.05), transparent);
@@ -75,7 +126,14 @@
 
 @layer components {
   .glass-card {
-    @apply bg-card/70 backdrop-blur-xl border border-border/60 rounded-xl;
+    @apply bg-card/90 backdrop-blur-xl border border-border/60 rounded-xl;
+    box-shadow: 
+      0 0 0 1px hsl(var(--border) / 0.4),
+      0 4px 20px -4px hsl(0 0% 0% / 0.1);
+  }
+
+  .dark .glass-card {
+    @apply bg-card/70;
     box-shadow: 
       0 0 0 1px hsl(var(--border) / 0.4),
       0 4px 20px -4px hsl(0 0% 0% / 0.4),
@@ -91,9 +149,16 @@
     box-shadow: 
       0 0 0 1px hsl(var(--primary) / 0.25),
       0 8px 32px -8px hsl(var(--primary) / 0.15),
+      0 16px 48px -12px hsl(0 0% 0% / 0.2);
+    transform: translateY(-2px);
+  }
+
+  .dark .glass-card-hover:hover {
+    box-shadow: 
+      0 0 0 1px hsl(var(--primary) / 0.25),
+      0 8px 32px -8px hsl(var(--primary) / 0.15),
       0 16px 48px -12px hsl(0 0% 0% / 0.5),
       inset 0 1px 0 hsl(210 20% 98% / 0.04);
-    transform: translateY(-2px);
   }
 
   .gradient-text {
@@ -198,6 +263,18 @@
   .noise-overlay {
     @apply pointer-events-none fixed inset-0 z-50 opacity-[0.01];
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  /* Category Pills/Capsules */
+  .category-pill {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer touch-manipulation;
+    @apply bg-secondary/50 text-foreground border border-border/50;
+    @apply hover:bg-primary/10 hover:border-primary/50 hover:text-primary;
+    min-height: 44px;
+  }
+
+  .category-pill.active {
+    @apply bg-primary text-primary-foreground border-primary;
   }
 
   /* Editor specific styles - Mobile optimized */
