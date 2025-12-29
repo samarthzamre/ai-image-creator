@@ -3,12 +3,13 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Wand2 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { getCategoryById } from "@/lib/categories";
+import { useCategories } from "@/lib/useCategories";
 import { Button } from "@/components/ui/button";
 
 const CategoryDetail = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
+  const { getCategoryById } = useCategories();
   const category = categoryId ? getCategoryById(categoryId) : undefined;
 
   if (!category) {
