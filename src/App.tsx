@@ -11,6 +11,7 @@ import SubcategoryDetail from "./pages/SubcategoryDetail";
 import Generate from "./pages/Generate";
 import History from "./pages/History";
 import Admin from "./pages/Admin";
+import Edit from "./pages/Edit";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,8 @@ const App = () => (
             <Route path="/generate/:categoryId/:subcategoryId" element={<Generate />} />
             <Route path="/history" element={<History />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/edit" element={<Edit />} />
+            <Route path="/edit/:imageId" element={<Edit />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

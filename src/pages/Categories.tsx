@@ -5,6 +5,7 @@ import { ArrowRight, Wand2, Search, X } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useCategories } from "@/lib/useCategories";
+import { getCategoryIcon } from "@/lib/categoryIcons";
 import { Input } from "@/components/ui/input";
 
 const Categories = () => {
@@ -97,16 +98,19 @@ const Categories = () => {
             >
               All
             </button>
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setActiveCategory(activeCategory === category.id ? null : category.id)}
-                className={`category-pill ${activeCategory === category.id ? 'active' : ''}`}
-              >
-                <span>{category.icon}</span>
-                <span>{category.name}</span>
-              </button>
-            ))}
+            {categories.map((category) => {
+              const IconComponent = getCategoryIcon(category.id);
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => setActiveCategory(activeCategory === category.id ? null : category.id)}
+                  className={`category-pill ${activeCategory === category.id ? 'active' : ''}`}
+                >
+                  <IconComponent className="w-4 h-4" />
+                  <span>{category.name}</span>
+                </button>
+              );
+            })}
           </motion.div>
 
           {/* Categories with Subcategories */}
@@ -121,9 +125,14 @@ const Categories = () => {
                 {/* Category Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center text-xl`}>
-                      {category.icon}
-                    </div>
+                    {(() => {
+                      const IconComponent = getCategoryIcon(category.id);
+                      return (
+                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center`}>
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                      );
+                    })()}
                     <div>
                       <h2 className="font-display text-xl font-bold">{category.name}</h2>
                       <p className="text-muted-foreground text-sm">{category.description}</p>

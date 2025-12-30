@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   History as HistoryIcon, 
   Trash2, 
   Download, 
   Clock, 
   ImageIcon,
-  ArrowRight 
+  ArrowRight,
+  Pencil
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -34,6 +35,7 @@ import {
 
 const History = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [history, setHistory] = useState<GeneratedImage[]>(getHistory());
 
   const formatTimeAgo = (timestamp: number): string => {
@@ -182,11 +184,20 @@ const History = () => {
 
                       {/* Actions */}
                       <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-9 flex-1"
+                          onClick={() => navigate(`/edit/${image.id}`)}
+                        >
+                          <Pencil className="w-4 h-4 mr-2" />
+                          Edit
+                        </Button>
+                        
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button size="sm" className="btn-primary flex-1 h-9">
-                              <Download className="w-4 h-4 mr-2" />
-                              Download
+                            <Button size="sm" className="btn-primary h-9">
+                              <Download className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
